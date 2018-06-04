@@ -99,25 +99,39 @@ var func4 = function (){
 
     function convert(array){
         var obj = {}
-
         for (let index = 0; index < array.length; index++) {
             const element = array[index];
             obj[element[0]] = element[1];
         }
-        // for (const key in arr) {
-        //     if (arr.hasOwnProperty(key)) {
-        //         obj[key] = arr[key];
-        //         const element = arr[key];
-        //     }
-        // }
-
         return obj;
     }
 
+    function convertLol(array){
+        var obj = {}
+        for (const key in array) {
+            if (array.hasOwnProperty(key)) {
+                const element = array[key];
+                obj[element[0]] = element[1];   
+            }
+        }
+        return obj;
+    }
+
+    function convertReduce(array){    
+        return mass.reduce(function(obj, current) {
+            obj[current[0]] = current[1]
+            return obj;
+          }, {});
+    }
+    
     var mass = [["a", 1], ["b", 2]];
 
     var obj = convert(mass);
+    var obj2 = convertReduce(mass);
+    var obj3 = convertLol(mass);
     console.log(obj);
+    console.log(obj2);
+    console.log(obj3);
 }
 
 func4();
