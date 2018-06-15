@@ -165,5 +165,29 @@ var definingFunction = function () {
 
 }
 
-definingFunction();
+
+var functionDeclarationVsFunctionExpressions = function(){
+
+    function funcDeclaration() {
+        return 'A function declaration';
+    }
+    
+    var funcExpression = function () {
+        return 'A function expression';
+    }
+
+    //Similar to the var statement, function declarations are hoisted to the top of other code. Function expressions aren’t hoisted, which allows them to retain a copy of the local variables from the scope where they were defined.
+
+    //benefits of func expression
+    // As closures
+    // As arguments to other functions
+    // As Immediately Invoked Function Expressions (IIFE)
+
+    //Closures are used when you want to give parameters to a function, before that function is executed. 
+
+    
+}
+
+//definingFunction();
+functionDeclarationVsFunctionExpressions();
 
