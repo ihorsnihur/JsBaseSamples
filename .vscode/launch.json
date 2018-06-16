@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/scripts/classes.js"
+            "program": "${workspaceFolder}/scripts/toDoList.js"
         },
 
     ]
