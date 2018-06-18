@@ -8,11 +8,6 @@ window.onload = function () {
 };
 
 
-
-
-
-
-// alert("sss");
 class Task {
     constructor(taskName, isDone) {
         this.taskName = taskName;
@@ -30,6 +25,9 @@ class ToDoList {
     }
 
     addTask(name) {
+        if(!this.tasks)
+            this.tasks = [];
+
         this.tasks.push(new Task(name, false));
     }
 
@@ -37,15 +35,6 @@ class ToDoList {
         this.tasks = this.tasks.filter(function (item) {
             return item.name != name;
         });
-
-        // for (let index = 0; index < this.tasks.length; index++) {
-        //     const element = this.tasks[index];
-        //     if(element.name == name){
-        //         var dd = [];
-        //         dd.remove
-        //         this.tasks.
-        //     }
-        // }
     }
 }
 // var t = new ToDoList();
@@ -54,7 +43,7 @@ class ToDoList {
 
 
 // Create a new list item when clicking on the "Add" button
-function newElement() {
+function addTask() {
     var li = document.createElement("li");
     var inputValue = document.getElementById("myInput").value;
     var t = document.createTextNode(inputValue);
@@ -66,32 +55,19 @@ function newElement() {
     }
     document.getElementById("myInput").value = "";
 
-
-
     var span = getRemoveControl();
     li.appendChild(span);
-
-    // for (i = 0; i < close.length; i++) {
-    //   close[i].onclick = function() {
-    //     var div = this.parentElement;
-    //     div.style.display = "none";
-    //   }
-    // }
-
-
-
 }
 
 function getRemoveControl(){
     var span = document.createElement("SPAN");
     var txt = document.createTextNode("X");
-    // span.className = "close";
     span.appendChild(txt);
-    span.onclick = remove;
+    span.onclick = removeTask;
     return span;
 }
 
-function remove() {
+function removeTask() {
     var div = this.parentElement;
     div.style.display = "none";
 };
