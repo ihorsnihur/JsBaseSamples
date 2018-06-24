@@ -5,8 +5,9 @@
     <script data-require="angular.js@1.3.0-beta.5" data-semver="1.3.0-beta.5" src="https://code.angularjs.org/1.3.0-beta.5/angular.js"></script>
     <link rel="stylesheet" href="style.css" />
     <script src="scripts/toDoList.js"></script>
-    <!-- <script src="scripts/modules.js"></script>
-    <script src="scripts/modules2.js"></script> -->
+    <!-- type="module" - required -->
+    <script type="module" src="scripts/modules.js"></script>
+    <script type="module" src="scripts/modules2.js"></script>
   </head>
 
   <body ng-app>
@@ -21,13 +22,14 @@
     </div>
     
     <ul id="myUL">
-      <li>Hit the gym</li>
-      <li class="checked">Pay bills</li>
-      <li>Meet George</li>
-      <li>Buy eggs</li>
-      <li>Read a book</li>
-      <li>Organize office</li>
     </ul>
+
+    <!-- <div >
+      <input type="button" onclick="clearToDoList()" value="Clear To Do list">
+    </div> -->
+    
   </body>
 
 </html>
+
+<!-- Investigate - Access to Script at 'file:///E:/Projects/Js%20Test/scripts/modules.js' from origin 'null' has been blocked by CORS policy: Invalid response. Origin 'null' is therefore not allowed access. -->
