@@ -1,18 +1,31 @@
 
 window.onload = function () {
 
-// var toDoList = localStorage.getItem("") looks like could be used only with server
+    var storage = new StorageManager();
+   var toDoListStorage = storage.getObject("ToDoListStorage");
+   //localStorage.getItem("ToDoListStorage"); //looks like could be used only with server
 
-    var toDoList = new ToDoList();
+   var toDoList = new ToDoList();
+   if(toDoListStorage){
+        toDoList = toDoListStorage;
+   }else{
     toDoList.addTask("TEST 1");
     toDoList.addTask("TEST 2");
     toDoList.addTask("TEST 3");
     toDoList.addTask("TEST 4");
+    // localStorage.setItem("ToDoListStorage", toDoList);
+    storage.addObject("ToDoListStorage", toDoList);
+   }
 
     var myUL = document.getElementById("myUL")
     myUL.model = toDoList;
     render(toDoList);
 };
+
+function clearToDoList(){
+    delete localStorage["ToDoListStorage"] 
+}
+
 
 function getToDoList(){
     return document.getElementById("myUL").model;
@@ -22,7 +35,7 @@ function render(toDoList){
     var toDoListElement = document.getElementById("myUL");
     while (toDoListElement.firstChild) toDoListElement.removeChild(toDoListElement.firstChild);
 
-    toDoList.getTasks().forEach(task => {
+    toDoList.allTasks.forEach(task => {
         generateTaskHtml(task);
     });
 };
@@ -36,6 +49,9 @@ function addTask() {
         toDoList.addTask(inputValue);
         render(toDoList);        
     }
+
+    var storage = new StorageManager();
+    storage.addObject("ToDoListStorage", toDoList);
     document.getElementById("myInput").value = "";
 }
 
@@ -43,6 +59,7 @@ function removeTask() {
     var task = this.parentElement.model;
     var toDoList = getToDoList();
     toDoList.removeTask(task);
+
     render(toDoList);
 };
 
@@ -106,13 +123,6 @@ function getEditButton() {
     return button;
 };
 
-
-
-// function clearToDoList(){
-//     delete localStorage["ToDoList"] 
-// }
-
-
 class Task {
     constructor(taskName, isDone) {
         this.taskName = taskName;
@@ -125,6 +135,10 @@ class ToDoList {
         if(!tasks)
             tasks = [];
         this.tasks = tasks;
+    }
+
+    get allTasks() {
+        return this.tasks;
     }
 
     getTasks() {
@@ -142,5 +156,21 @@ class ToDoList {
         this.tasks = this.tasks.filter(function (item) {
             return item.taskName != task.taskName;
         });
+    }
+}
+
+class StorageManager{
+
+    addObject(key, object){
+        var serialized = JSON.stringify(object);
+        localStorage.setItem(key, serialized);
+    }
+
+    getObject(key){
+        var stringifiedObject = localStorage.getItem(key);
+        if(!stringifiedObject)
+            return undefined;
+        var obj = JSON.parse(stringifiedObject);
+        return new ToDoList(obj.tasks);
     }
 }

@@ -14,16 +14,22 @@
     <!-- <h1>Hello Plunker!</h1> -->
     <!-- {{20 / 10}}
     angular -->
+<form onsubmit="addTask()">
+
 
     <div id="myDIV" class="header">
       <h2>My To Do List</h2>
-      <input type="text" id="myInput" placeholder="Title...">
-      <input type="button" onclick="addTask()" value="Add">
+      <input type="text" id="myInput" placeholder="Title..." required>
+      <!-- <input type="button" value="Add"> -->
+      <button type="submit">Add</button>
+          <!-- value="Add" -->
+      <!-- onclick="addTask()" -->
     </div>
     
     <ul id="myUL">
     </ul>
 
+</form> 
     <!-- <div >
       <input type="button" onclick="clearToDoList()" value="Clear To Do list">
     </div> -->
