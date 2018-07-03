@@ -1,37 +1,52 @@
+import { Task, ToDoList } from './modules.js';
 
 window.onload = function () {
+    init();
 
     var storage = new StorageManager();
-   var toDoListStorage = storage.getObject("ToDoListStorage");
-   //localStorage.getItem("ToDoListStorage"); //looks like could be used only with server
+    var toDoListStorage = storage.getObject("ToDoListStorage");    
 
-   var toDoList = new ToDoList();
-   if(toDoListStorage){
+    var toDoList = new ToDoList();
+    if (toDoListStorage) {
         toDoList = toDoListStorage;
-   }else{
-    toDoList.addTask("TEST 1");
-    toDoList.addTask("TEST 2");
-    toDoList.addTask("TEST 3");
-    toDoList.addTask("TEST 4");
-    // localStorage.setItem("ToDoListStorage", toDoList);
-    storage.addObject("ToDoListStorage", toDoList);
-   }
+    } else {
+        toDoList.addTask("TEST 1");
+        toDoList.addTask("TEST 2");
+        toDoList.addTask("TEST 3");
+        toDoList.addTask("TEST 4");
+        // localStorage.setItem("ToDoListStorage", toDoList);
+        storage.addObject("ToDoListStorage", toDoList);
+    }
 
     var myUL = document.getElementById("myUL")
     myUL.model = toDoList;
     render(toDoList);
 };
 
-function clearToDoList(){
-    delete localStorage["ToDoListStorage"] 
+function init() {
+    attachFormSubmit();
+}
+
+function attachFormSubmit() {
+    var theForm = document.getElementById("addTaskForm");
+
+    if (theForm.addEventListener) {
+        theForm.addEventListener('submit', addTask, false);
+    } else if (theForm.attachEvent) {
+        theForm.attachEvent('onsubmit', addTask);
+    }
+}
+
+function clearToDoList() {
+    delete localStorage["ToDoListStorage"]
 }
 
 
-function getToDoList(){
+function getToDoList() {
     return document.getElementById("myUL").model;
 }
 
-function render(toDoList){
+function render(toDoList) {
     var toDoListElement = document.getElementById("myUL");
     while (toDoListElement.firstChild) toDoListElement.removeChild(toDoListElement.firstChild);
 
@@ -40,14 +55,29 @@ function render(toDoList){
     });
 };
 
-function addTask() {    
-    var inputValue = document.getElementById("myInput").value;    
+function generateTaskHtml(task) {
+    var taskDesc = task.taskName
+    var span = document.createElement("SPAN");
+    var txt = document.createTextNode(taskDesc);
+    span.appendChild(txt);
+
+    var li = document.createElement("li");
+    li.appendChild(span);
+    li.appendChild(getEditTaskControl());
+    li.appendChild(getRemoveButton());
+    li.appendChild(getEditButton());
+    li.model = task;
+    document.getElementById("myUL").appendChild(li);
+};
+
+function addTask() {
+    var inputValue = document.getElementById("myInput").value;
     if (inputValue === '') {
         alert("Task description is required");
     } else {
         var toDoList = getToDoList();
         toDoList.addTask(inputValue);
-        render(toDoList);        
+        render(toDoList);
     }
 
     var storage = new StorageManager();
@@ -59,6 +89,9 @@ function removeTask() {
     var task = this.parentElement.model;
     var toDoList = getToDoList();
     toDoList.removeTask(task);
+
+    var storage = new StorageManager();
+    storage.addObject("ToDoListStorage", toDoList);
 
     render(toDoList);
 };
@@ -83,21 +116,11 @@ function editTask(id) {
         task.taskName = editInput.value;
         this.value = "Edit";
     }
-};
 
-function generateTaskHtml(task) {
-    var taskDesc = task.taskName
-    var span = document.createElement("SPAN");
-    var txt = document.createTextNode(taskDesc);
-    span.appendChild(txt);
-
-    var li = document.createElement("li");
-    li.appendChild(span);
-    li.appendChild(getEditTaskControl());
-    li.appendChild(getRemoveControl());
-    li.appendChild(getEditButton());
-    li.model = task;
-    document.getElementById("myUL").appendChild(li);
+    
+    var toDoList = getToDoList();
+    var storage = new StorageManager();
+    storage.addObject("ToDoListStorage", toDoList);
 };
 
 function getEditTaskControl() {
@@ -107,7 +130,7 @@ function getEditTaskControl() {
     return editText;
 };
 
-function getRemoveControl() {
+function getRemoveButton() {
     var button = document.createElement("input");
     button.type = "button";
     button.value = "Delete";
@@ -123,54 +146,30 @@ function getEditButton() {
     return button;
 };
 
-class Task {
-    constructor(taskName, isDone) {
-        this.taskName = taskName;
-        this.isDone = isDone;
-    }
-}
+class StorageManager {
 
-class ToDoList {
-    constructor(tasks) {
-        if(!tasks)
-            tasks = [];
-        this.tasks = tasks;
-    }
-
-    get allTasks() {
-        return this.tasks;
-    }
-
-    getTasks() {
-        return this.tasks;
-    }
-
-    addTask(name) {
-        if (!this.tasks)
-            this.tasks = [];
-
-        this.tasks.push(new Task(name, false));
-    }
-
-    removeTask(task) {
-        this.tasks = this.tasks.filter(function (item) {
-            return item.taskName != task.taskName;
-        });
-    }
-}
-
-class StorageManager{
-
-    addObject(key, object){
+    addObject(key, object) {
         var serialized = JSON.stringify(object);
         localStorage.setItem(key, serialized);
     }
 
-    getObject(key){
+    getObject(key) {
         var stringifiedObject = localStorage.getItem(key);
-        if(!stringifiedObject)
+        if (!stringifiedObject)
             return undefined;
         var obj = JSON.parse(stringifiedObject);
         return new ToDoList(obj.tasks);
     }
 }
+
+
+// function submitWait(){ 	
+// 	if (document.all || document.getElementById) {
+// 		for (let i = 0; i < this.length; i++) {
+// 		var formElement = this.elements[i];
+// 			if (formElement.type == "submit") {
+// 				formElement.disabled = true;
+// 			}
+// 		}
+// 	}
+// }
